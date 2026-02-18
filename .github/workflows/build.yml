@@ -37,7 +37,7 @@ jobs:
         run: cd android && ./gradlew clean
 
       - name: Build Android Release
-        run: cd android && ./gradlew bundleRelease
+        run: cd android && ./gradlew assembleRelease
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
