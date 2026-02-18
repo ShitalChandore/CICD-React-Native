@@ -10,37 +10,69 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # 1. Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
 
+      # 3. Install dependencies
       - name: Install dependencies
         run: npm install
 
+      # 4. Run tests
       - name: Run tests
         run: npm test
 
+      # 5. Setup Java
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
+      # 6. Grant Gradle wrapper permissions
       - name: Grant Gradle wrapper permissions
         run: chmod +x android/gradlew
 
+      # 7. Clean build
       - name: Clean build
         run: cd android && ./gradlew clean
 
-      - name: Build Android Release
+      # 8. Decode keystore
+      - name: Decode Keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/my-release-key.keystore
+
+      # 9. Set environment variables for signing
+      - name: Set environment variables
+        run: |
+          echo "ANDROID_KEYSTORE_PATH=$GITHUB_WORKSPACE/android/app/my-release-key.keystore" >> $GITHUB_ENV
+          echo "ANDROID_KEYSTORE_PASSWORD=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
+          echo "ANDROID_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}" >> $GITHUB_ENV
+          echo "ANDROID_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}" >> $GITHUB_ENV
+
+      # 10. Build signed APK
+      - name: Build Signed APK
         run: cd android && ./gradlew assembleRelease
 
+      # 11. Build signed AAB
+      - name: Build Signed AAB
+        run: cd android && ./gradlew bundleRelease
+
+      # 12. Upload APK artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: release-apk
+          name: app-release-apk
           path: android/app/build/outputs/apk/release/app-release.apk
+
+      # 13. Upload AAB artifact
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
