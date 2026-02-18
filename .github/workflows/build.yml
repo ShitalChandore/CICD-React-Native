@@ -38,3 +38,9 @@ jobs:
 
       - name: Build Android Release
         run: cd android && ./gradlew bundleRelease
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
