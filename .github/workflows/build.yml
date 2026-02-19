@@ -45,12 +45,12 @@ jobs:
 
       # 8. Decode keystore
       - name: Decode Keystore
-        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/my-release-key.keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/my-upload-key.keystore
 
       # 9. Set environment variables for signing
       - name: Set environment variables
         run: |
-          echo "ANDROID_KEYSTORE_PATH=$GITHUB_WORKSPACE/android/app/my-release-key.keystore" >> $GITHUB_ENV
+          echo "ANDROID_KEYSTORE_PATH=$GITHUB_WORKSPACE/android/app/my-upload-key.keystore" >> $GITHUB_ENV
           echo "ANDROID_KEYSTORE_PASSWORD=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
           echo "ANDROID_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}" >> $GITHUB_ENV
           echo "ANDROID_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}" >> $GITHUB_ENV
