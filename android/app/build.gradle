@@ -101,7 +101,7 @@ android {
                 keyPassword MYAPP_UPLOAD_KEY_PASSWORD
             } else {
                 // CI/CD build using environment variables
-                storeFile file(System.getenv("ANDROID_KEYSTORE_PATH"))
+                storeFile file(System.getenv("ANDROID_KEYSTORE_BASE64"))
                 storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
                 keyAlias System.getenv("ANDROID_KEY_ALIAS")
                 keyPassword System.getenv("ANDROID_KEY_PASSWORD")
