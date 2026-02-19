@@ -34,7 +34,7 @@ local.properties
 *.keystore
 !debug.keystore
 .kotlin/
-android/gradle.properties
+android/gradle copy.properties
 android/app/my-upload-key.keystore.base64
 
 # node.js
